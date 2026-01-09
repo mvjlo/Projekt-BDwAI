@@ -1,0 +1,65 @@
+@model WebApplication1.Models.ViewModels.LicenseCreateViewModel
+
+@{
+    ViewData["Title"] = "Dodaj licencję";
+}
+
+<h1>Dodaj licencję</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="PluginId" class="control-label"></label>
+                <select asp-for="PluginId" class="form-select" asp-items="ViewBag.PluginId">
+                    <option value="">-- Wybierz wtyczkę --</option>
+                </select>
+                <span asp-validation-for="PluginId" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="SerialKey" class="control-label"></label>
+                <input asp-for="SerialKey" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX" />
+                <span asp-validation-for="SerialKey" class="text-danger"></span>
+                <small class="form-text text-muted">Format: XXXX-XXXX-XXXX-XXXX (wielkie litery i cyfry)</small>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                <input asp-for="PurchaseDate" class="form-control" type="date" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="ExpirationDate" class="control-label"></label>
+                <input asp-for="ExpirationDate" class="form-control" type="date" />
+                <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                <small class="form-text text-muted">Opcjonalne - zostaw puste dla licencji bezterminowej</small>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Zapisz" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            <h5>Wskazówki:</h5>
+            <ul>
+                <li>Klucz seryjny musi być w formacie: XXXX-XXXX-XXXX-XXXX</li>
+                <li>Używaj wielkich liter i cyfr (A-Z, 0-9)</li>
+                <li>Data zakupu nie może być z przyszłości</li>
+                <li>Data wygaśnięcia jest opcjonalna</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

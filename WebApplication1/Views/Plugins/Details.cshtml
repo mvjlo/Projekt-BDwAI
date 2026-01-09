@@ -1,0 +1,111 @@
+@model WebApplication1.Models.Plugin
+
+@{
+    ViewData["Title"] = "Szczegóły wtyczki";
+}
+
+<h1>@Model.Name</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Informacje podstawowe</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Producent</dt>
+                    <dd class="col-sm-9">
+                        <a asp-controller="Manufacturers" asp-action="Details" asp-route-id="@Model.Manufacturer?.Id">
+                            @Model.Manufacturer?.Name
+                        </a>
+                    </dd>
+
+                    <dt class="col-sm-3">Kategoria</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-info">@Model.Category?.Name</span>
+                    </dd>
+
+                    <dt class="col-sm-3">Wersja</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-secondary">@Model.Version</span>
+                    </dd>
+
+                    <dt class="col-sm-3">Cena</dt>
+                    <dd class="col-sm-9">
+                        <strong class="text-success">@Model.Price.ToString("C")</strong>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Opis</h5>
+                </div>
+                <div class="card-body">
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SystemRequirements))
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Wymagania systemowe</h5>
+                </div>
+                <div class="card-body">
+                    <p>@Model.SystemRequirements</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Akcje</h5>
+            </div>
+            <div class="card-body">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Licenses" asp-action="Create" asp-route-pluginId="@Model.Id" class="btn btn-success w-100 mb-2">
+                        Dodaj licencję
+                    </a>
+                }
+                @if (User.IsInRole("Administrator"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning w-100 mb-2">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger w-100">Usuń</a>
+                }
+            </div>
+        </div>
+
+        @if (Model.Manufacturer != null && !string.IsNullOrEmpty(Model.Manufacturer.Website))
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Kontakt z producentem</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Strona WWW:</strong><br />
+                        <a href="@Model.Manufacturer.Website" target="_blank">@Model.Manufacturer.Website</a>
+                    </p>
+                    @if (!string.IsNullOrEmpty(Model.Manufacturer.SupportEmail))
+                    {
+                        <p><strong>Email wsparcia:</strong><br />
+                            <a href="mailto:@Model.Manufacturer.SupportEmail">@Model.Manufacturer.SupportEmail</a>
+                        </p>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
+</div>

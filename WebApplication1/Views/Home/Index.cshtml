@@ -1,8 +1,88 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<WebApplication1.Models.Plugin>
+@{
+    ViewData["Title"] = "Strona główna";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mb-5">
+    <h1 class="display-4">Witaj w VST Vault</h1>
+    <p class="lead">System zarządzania wtyczkami VST - Twoja baza danych wtyczek audio</p>
+    <a asp-controller="Plugins" asp-action="Index" class="btn btn-primary btn-lg">Przeglądaj wtyczki</a>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a asp-controller="Licenses" asp-action="Create" class="btn btn-success btn-lg">Dodaj licencję</a>
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Najnowsze wtyczki</h2>
+    </div>
+</div>
+
+<div class="row">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var plugin in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@plugin.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@plugin.Manufacturer?.Name</h6>
+                        <p class="card-text">
+                            <span class="badge bg-info">@plugin.Category?.Name</span>
+                            <span class="badge bg-secondary">@plugin.Version</span>
+                        </p>
+                        <p class="card-text"><strong>@plugin.Price.ToString("C")</strong></p>
+                        @if (!string.IsNullOrEmpty(plugin.Description))
+                        {
+                            <p class="card-text">@(plugin.Description.Length > 100 ? plugin.Description.Substring(0, 100) + "..." : plugin.Description)</p>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <a asp-controller="Plugins" asp-action="Details" asp-route-id="@plugin.Id" class="btn btn-sm btn-outline-primary">Szczegóły</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info">
+                Brak wtyczek w bazie danych. 
+                @if (User.IsInRole("Administrator"))
+                {
+                    <a asp-controller="Plugins" asp-action="Create">Dodaj pierwszą wtyczkę</a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Baza wtyczek</h5>
+                <p class="card-text">Przeglądaj obszerną bazę wtyczek VST od różnych producentów.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Zarządzaj licencjami</h5>
+                <p class="card-text">Przechowuj klucze seryjne i informacje o swoich licencjach w jednym miejscu.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Zaawansowane wyszukiwanie</h5>
+                <p class="card-text">Filtruj wtyczki według kategorii, producenta czy nazwy.</p>
+            </div>
+        </div>
+    </div>
 </div>

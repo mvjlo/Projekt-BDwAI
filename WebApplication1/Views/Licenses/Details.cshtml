@@ -1,0 +1,133 @@
+@model WebApplication1.Models.License
+
+@{
+    ViewData["Title"] = "Szczegóły licencji";
+}
+
+<h1>Szczegóły licencji</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>@Model.Plugin?.Name</h4>
+                <small class="text-muted">@Model.Plugin?.Manufacturer?.Name</small>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Klucz seryjny</dt>
+                    <dd class="col-sm-8">
+                        <code class="fs-5">@Model.SerialKey</code>
+                        <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('@Model.SerialKey')">
+                            Kopiuj
+                        </button>
+                    </dd>
+
+                    <dt class="col-sm-4">Data zakupu</dt>
+                    <dd class="col-sm-8">@Model.PurchaseDate.ToString("dd MMMM yyyy")</dd>
+
+                    @if (Model.ExpirationDate.HasValue)
+                    {
+                        <dt class="col-sm-4">Data wygaśnięcia</dt>
+                        <dd class="col-sm-8">
+                            @Model.ExpirationDate.Value.ToString("dd MMMM yyyy")
+                            @if (Model.ExpirationDate.Value < DateTime.Now)
+                            {
+                                <span class="badge bg-danger ms-2">Wygasła</span>
+                            }
+                            else if (Model.ExpirationDate.Value < DateTime.Now.AddDays(30))
+                            {
+                                <span class="badge bg-warning ms-2">Wygasa wkrótce</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success ms-2">Aktywna</span>
+                            }
+                        </dd>
+                    }
+                    else
+                    {
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-success">Licencja bezterminowa</span>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Informacje o wtyczce</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Kategoria</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge bg-info">@Model.Plugin?.Category?.Name</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Wersja</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge bg-secondary">@Model.Plugin?.Version</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Cena zakupu</dt>
+                    <dd class="col-sm-8">
+                        <strong>@Model.Plugin?.Price.ToString("C")</strong>
+                    </dd>
+                </dl>
+                <a asp-controller="Plugins" asp-action="Details" asp-route-id="@Model.PluginId" class="btn btn-primary">
+                    Zobacz pełne szczegóły wtyczki
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        @if (Model.Plugin?.Manufacturer != null)
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Wsparcie producenta</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>@Model.Plugin.Manufacturer.Name</strong></p>
+                    @if (!string.IsNullOrEmpty(Model.Plugin.Manufacturer.Website))
+                    {
+                        <p>
+                            <a href="@Model.Plugin.Manufacturer.Website" target="_blank" class="btn btn-sm btn-outline-primary">
+                                Strona WWW
+                            </a>
+                        </p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Plugin.Manufacturer.SupportEmail))
+                    {
+                        <p>
+                            <a href="mailto:@Model.Plugin.Manufacturer.SupportEmail" class="btn btn-sm btn-outline-secondary">
+                                Email wsparcia
+                            </a>
+                        </p>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Powrót do moich licencji</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Usuń licencję</a>
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Klucz seryjny skopiowany do schowka!');
+            }, function(err) {
+                alert('Nie udało się skopiować klucza.');
+            });
+        }
+    </script>
+}

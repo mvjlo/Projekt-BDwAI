@@ -1,0 +1,37 @@
+@model WebApplication1.Models.License
+
+@{
+    ViewData["Title"] = "Usuń licencję";
+}
+
+<h1>Usuń licencję</h1>
+
+<h3>Czy na pewno chcesz usunąć tę licencję?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Wtyczka</dt>
+        <dd class="col-sm-9">@Model.Plugin?.Name</dd>
+
+        <dt class="col-sm-3">Producent</dt>
+        <dd class="col-sm-9">@Model.Plugin?.Manufacturer?.Name</dd>
+
+        <dt class="col-sm-3">Klucz seryjny</dt>
+        <dd class="col-sm-9"><code>@Model.SerialKey</code></dd>
+
+        <dt class="col-sm-3">Data zakupu</dt>
+        <dd class="col-sm-9">@Model.PurchaseDate.ToString("dd.MM.yyyy")</dd>
+
+        @if (Model.ExpirationDate.HasValue)
+        {
+            <dt class="col-sm-3">Data wygaśnięcia</dt>
+            <dd class="col-sm-9">@Model.ExpirationDate.Value.ToString("dd.MM.yyyy")</dd>
+        }
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Usuń" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+    </form>
+</div>

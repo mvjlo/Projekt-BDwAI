@@ -1,0 +1,40 @@
+@model IEnumerable<WebApplication1.Models.Manufacturer>
+
+@{
+    ViewData["Title"] = "Producenci";
+}
+
+<h1>Producenci</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj nowego producenta</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Strona WWW</th>
+            <th>Email wsparcia</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Name</td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.Website))
+                {
+                    <a href="@item.Website" target="_blank">@item.Website</a>
+                }
+            </td>
+            <td>@item.SupportEmail</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Szczegóły</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Usuń</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

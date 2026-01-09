@@ -1,0 +1,51 @@
+@model WebApplication1.Models.Manufacturer
+
+@{
+    ViewData["Title"] = "Szczegóły producenta";
+}
+
+<h1>Szczegóły producenta</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Website)
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.Website))
+            {
+                <a href="@Model.Website" target="_blank">@Model.Website</a>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SupportEmail)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SupportEmail)
+        </dd>
+    </dl>
+    
+    @if (Model.Plugins.Any())
+    {
+        <h3 class="mt-4">Wtyczki tego producenta</h3>
+        <ul class="list-group">
+            @foreach (var plugin in Model.Plugins)
+            {
+                <li class="list-group-item">
+                    <a asp-controller="Plugins" asp-action="Details" asp-route-id="@plugin.Id">@plugin.Name</a>
+                </li>
+            }
+        </ul>
+    }
+</div>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edytuj</a>
+    <a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
+</div>

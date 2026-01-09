@@ -1,0 +1,65 @@
+@model IEnumerable<WebApplication1.Models.License>
+
+@{
+    ViewData["Title"] = "Moje Licencje";
+}
+
+<h1>Moje Licencje</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Dodaj nową licencję</a>
+</p>
+
+@if (Model.Any())
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>@item.Plugin?.Name</h5>
+                        <small class="text-muted">@item.Plugin?.Manufacturer?.Name</small>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Klucz seryjny:</strong> <code>@item.SerialKey</code></p>
+                        <p><strong>Data zakupu:</strong> @item.PurchaseDate.ToString("dd.MM.yyyy")</p>
+                        @if (item.ExpirationDate.HasValue)
+                        {
+                            <p><strong>Data wygaśnięcia:</strong> @item.ExpirationDate.Value.ToString("dd.MM.yyyy")</p>
+                            if (item.ExpirationDate.Value < DateTime.Now)
+                            {
+                                <span class="badge bg-danger">Wygasła</span>
+                            }
+                            else if (item.ExpirationDate.Value < DateTime.Now.AddDays(30))
+                            {
+                                <span class="badge bg-warning">Wygasa wkrótce</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Aktywna</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Licencja bezterminowa</span>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Szczegóły</a>
+                        <a asp-controller="Plugins" asp-action="Details" asp-route-id="@item.PluginId" class="btn btn-sm btn-outline-primary">Zobacz wtyczkę</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Usuń</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <h4>Nie masz jeszcze żadnych licencji</h4>
+        <p>Dodaj swoją pierwszą licencję, aby zarządzać swoimi wtyczkami VST.</p>
+        <a asp-action="Create" class="btn btn-success">Dodaj licencję</a>
+    </div>
+}
