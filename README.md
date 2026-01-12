@@ -102,7 +102,7 @@ dotnet ef database update
 dotnet run
 ```
 
-5. Aplikacja będzie dostępna pod adresem: `https://localhost:5001`
+5. Aplikacja będzie dostępna pod adresem: `https://localhost:5227`
 
 ### Domyślne Konto Administratora
 - **Email:** admin@vstvault.com
